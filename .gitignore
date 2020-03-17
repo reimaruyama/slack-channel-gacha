@@ -1,0 +1,17 @@
+# chaliceの管理ディレクトリおよび設定ファイル
+.chalice/deployments/
+.chalice/venv/
+.chalice/deployed
+.chalice/config.json
+
+# 開発環境の環境変数を管理するファイル
+.envrc
+
+# 開発環境のライブラリ
+modules/
+
+# python
+__pycache__/
+
+# pytest
+.pytest_cache/
