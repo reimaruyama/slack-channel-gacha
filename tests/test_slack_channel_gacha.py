@@ -7,7 +7,7 @@ import os
 import slack
 
 from chalicelib.slack_channel_gacha.channel import ChannelPurpose, ChannelId, Channel
-from chalicelib.slack_channel_gacha.gacha import Gacha, SlackClientError
+from chalicelib.slack_channel_gacha.gacha import Gacha
 
 def test_channel_id_is_started_with_big_c():
 	"""
@@ -79,8 +79,8 @@ def test_channel_object_for_post_string():
 		id=ChannelId("C2740KJ1K"),
 		purpose=ChannelPurpose("チャンネル説明")
 	)
-	post_format = channel.for_post_format()
-	assert post_format == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\npurpose: チャンネル説明"
+
+	assert str(channel) == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\n説明: チャンネル説明"
 
 def test_channel_object_purpose_blank():
 	"""
@@ -90,17 +90,9 @@ def test_channel_object_purpose_blank():
 		id=ChannelId("C2740KJ1K"),
 		purpose=ChannelPurpose("")
 	)
-	post_format = channel.for_post_format()
-	assert post_format == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\npurpose: 未設定"
 
+	assert str(channel) == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\n説明: 未設定"
 
-def test_response_check():
-	gacha =	Gacha()
-	response = {
-		"ok": False
-	}
-	with pytest.raises(SlackClientError):
-		gacha.response_check(response)
 
 # TODO: mockを使ってslack APIのテストをかく
 
