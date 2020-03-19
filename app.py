@@ -29,3 +29,16 @@ def index(event):
         logger.info(error)
     return None
 
+# ローカル実行時のエンドポイント
+def main():
+    try:
+        channel_gacha = Gacha()
+        channel_gacha.play()
+    except Exception as error:
+        notify_to_slack(error)
+        logger.info(error)
+    return None
+
+if __name__ == "__main__":
+	main()
+
