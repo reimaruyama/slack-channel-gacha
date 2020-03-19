@@ -79,8 +79,10 @@ def test_channel_object_for_post_string():
 		id=ChannelId("C2740KJ1K"),
 		purpose=ChannelPurpose("チャンネル説明")
 	)
+	gacha = Gacha()
+	post_text = gacha.build_message(channel)
 
-	assert str(channel) == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\n説明: チャンネル説明"
+	assert post_text == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\n説明: チャンネル説明"
 
 def test_channel_object_purpose_blank():
 	"""
@@ -90,8 +92,10 @@ def test_channel_object_purpose_blank():
 		id=ChannelId("C2740KJ1K"),
 		purpose=ChannelPurpose("")
 	)
+	gacha = Gacha()
+	post_text = gacha.build_message(channel)
 
-	assert str(channel) == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\n説明: 未設定"
+	assert post_text == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\n説明: 未設定"
 
 
 # TODO: mockを使ってslack APIのテストをかく
