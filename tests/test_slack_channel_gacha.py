@@ -2,12 +2,13 @@ import pytest
 
 import random, string
 import textwrap
-import os
+from os import environ as env
 
 import slack
 
 from chalicelib.slack_channel_gacha.channel import ChannelPurpose, ChannelId, Channel
 from chalicelib.slack_channel_gacha.gacha import Gacha
+from chalicelib.slack_channel_gacha.i18n import I18n
 
 def test_channel_id_is_started_with_big_c():
     """
@@ -75,12 +76,12 @@ def test_channel_object():
     assert channel.purpose.value == "チャンネル説明"
 
 def test_channel_object_for_post_string():
+    env["OUTPUT_LANGUAGE"] = "ja"
     channel = Channel(
         id=ChannelId("C2740KJ1K"),
         purpose=ChannelPurpose("チャンネル説明")
     )
-    gacha = Gacha()
-    post_text = gacha.build_message(channel)
+    post_text = channel.message_format()
 
     assert post_text == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\n説明: チャンネル説明"
 
@@ -88,14 +89,38 @@ def test_channel_object_purpose_blank():
     """
     チャンネルの説明が空文字列のみの場合は未設定と表示される
     """
+    env["OUTPUT_LANGUAGE"] = "ja"
     channel = Channel(
         id=ChannelId("C2740KJ1K"),
         purpose=ChannelPurpose("")
     )
-    gacha = Gacha()
-    post_text = gacha.build_message(channel)
+    post_text = channel.message_format()
 
     assert post_text == "本日のチャンネルガチャ\nチャンネル: <#C2740KJ1K>\n説明: 未設定"
+
+def test_channel_object_for_post_string_in_english():
+    env["OUTPUT_LANGUAGE"] = "en"
+    channel = Channel(
+        id=ChannelId("C2740KJ1K"),
+        purpose=ChannelPurpose("チャンネル説明")
+    )
+    post_text = channel.message_format()
+
+    assert post_text == "Today's Channel Gacha!\nChannel: <#C2740KJ1K>\nDescription: チャンネル説明"
+
+
+def test_channel_object_purpose_blank_in_english():
+    """
+    チャンネルの説明が空文字列のみの場合は未設定と表示される
+    """
+    env["OUTPUT_LANGUAGE"] = "en"
+    channel = Channel(
+        id=ChannelId("C2740KJ1K"),
+        purpose=ChannelPurpose("")
+    )
+    post_text = channel.message_format()
+
+    assert post_text == "Today's Channel Gacha!\nChannel: <#C2740KJ1K>\nDescription: No Description."
 
 
 # TODO: mockを使ってslack APIのテストをかく

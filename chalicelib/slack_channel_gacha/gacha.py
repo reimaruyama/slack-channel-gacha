@@ -11,7 +11,7 @@ class Gacha:
     def play(self):
         channels = self.__client.fetch_channels()
         selected_channel = self.select(channels)
-        message = self.build_message(selected_channel)
+        message = selected_channel.message_format()
         self.__client.notify(message)
 
     def select(self, channels):
@@ -31,15 +31,6 @@ class Gacha:
             id = ChannelId(channel["id"]),
             purpose = ChannelPurpose(channel["purpose"]["value"])
         )
-
-
-    def build_message(self, channel):
-        """
-        Slackに投稿する形式の文字列を返します。
-        チャンネルの説明が空文字列だった場合は`未設定`と表示します。
-        """
-        message = f"本日のチャンネルガチャ\nチャンネル: <#{str(channel.id)}>\n説明: {str(channel.purpose)}"
-        return message
 
 
 def main():

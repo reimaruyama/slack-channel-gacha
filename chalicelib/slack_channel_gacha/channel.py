@@ -1,5 +1,8 @@
 import dataclasses
+from os import environ as env
 import re
+
+from .i18n import I18n
 
 @dataclasses.dataclass(frozen=True)
 class ChannelId:
@@ -25,19 +28,23 @@ class ChannelPurpose:
     """
     value: str
     max_length = 250
-    BLANK_PURPOSE_TEXT= "未設定"
 
     def __post_init__(self):
         assert len(self.value) <= ChannelPurpose.max_length
 
-    def __str__(self):
-        if len(self.value) == 0: return ChannelPurpose.BLANK_PURPOSE_TEXT
+    def __len__(self):
+        return len(self.value)
 
-        return self.value
+    def __str__(self):
+        return I18n.channel_purpose(self)
 
 
 @dataclasses.dataclass(frozen=True)
 class Channel:
     id: ChannelId
     purpose: ChannelPurpose
+
+    def message_format(self):
+        message = I18n.message_format(self, language=env["OUTPUT_LANGUAGE"])
+        return message
 
