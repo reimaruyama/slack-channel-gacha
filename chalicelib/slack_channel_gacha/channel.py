@@ -1,5 +1,8 @@
 import dataclasses
+from os import environ as env
 import re
+
+from .i18n import I18n
 
 @dataclasses.dataclass(frozen=True)
 class ChannelId:
@@ -7,10 +10,10 @@ class ChannelId:
     チャンネルIDを表現するValueオブジェクト
     """
     value: str
-    regex = r"^C[0-9, A-Z]{8}$"
+    REGEX = r"^C[0-9, A-Z]{8}$"
 
     def __post_init__(self):
-        matched = re.match(ChannelId.regex, self.value)
+        matched = re.match(ChannelId.REGEX, self.value)
         assert self.value == matched.group()
 
     def __str__(self):
@@ -25,29 +28,23 @@ class ChannelPurpose:
     """
     value: str
     max_length = 250
-    blank_purpose_text = "未設定"
 
     def __post_init__(self):
         assert len(self.value) <= ChannelPurpose.max_length
 
-    def __str__(self):
-        if len(self.value) == 0: return ChannelPurpose.blank_purpose_text
+    def __len__(self):
+        return len(self.value)
 
-        return self.value
+    def __str__(self):
+        return I18n.channel_purpose(self)
 
 
 @dataclasses.dataclass(frozen=True)
-class GachaedChannel:
+class Channel:
     id: ChannelId
     purpose: ChannelPurpose
 
-
-    def __str__(self):
-        """
-        Slackに投稿する形式の文字列を返します。
-        チャンネルの説明が空文字列だった場合は`未設定`と表示します。
-        """
-        result = f"本日のチャンネルガチャ\nチャンネル: <#{str(self.id)}>\n説明: {str(self.purpose)}"
-        return result
-
+    def message_format(self):
+        message = I18n.message_format(self, language=env["OUTPUT_LANGUAGE"])
+        return message
 
