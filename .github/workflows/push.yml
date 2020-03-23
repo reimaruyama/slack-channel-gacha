@@ -25,3 +25,4 @@ jobs:
         SLACK_OUTPUT_CHANNEL: ""
         ERROR_NOTICE_WEBHOOK: ""
         ERROR_NOTICE_USER_MENTION: ""
+        OUTPUT_LANGUAGE: "ja"
