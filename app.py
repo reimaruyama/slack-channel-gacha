@@ -12,13 +12,24 @@ logger.setLevel(logging.INFO)
 
 app = Chalice(app_name='channel-gacha')
 
+if not "OUTPUT_LANGUAGE" in env:
+    env["OUTPUT_LANGUAGE"] = "en"
+
+if not "SCHEDULE" in env:
+    env["SCHEDULE"] = "0 9 ? * * *"
+
+
 def notify_to_slack(text):
+    if (not "ERROR_NOTICE_USER_MENTION" in env) or (not "ERROR_NOTICE_WEBHOOK" in env):
+        return None
+
     payload = {"channel": env["ERROR_NOTICE_USER_MENTION"], "username": "webhookbot", "text": str(text), "icon_emoji": ":ghost:"}
     response = requests.post(env["ERROR_NOTICE_WEBHOOK"], data=json.dumps(payload))
     logger.info(response.text)
+    return None
 
-# JSTで 月~金の18時
-@app.schedule('cron(0 9 ? * * *)')
+
+@app.schedule(f'cron({env["SCHEDULE"]})')
 def index(event):
     try:
         logger.info(event)
