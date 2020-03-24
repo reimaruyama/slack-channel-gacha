@@ -1,0 +1,33 @@
+{
+  "version": "2.0",
+  "app_name": "slack-channel-gacha",
+  "stages": {
+    "dev": {
+      "api_gateway_stage": "api",
+      "environment_variables": {
+        // [Required]
+        // Your Slack Bot user Token
+        // This app needs 2 permissions below.
+        // - `chat:write`
+        // - `channels:read`
+        "SLACK_BOT_USER_TOKEN": "xoxb-0000000000-00000000000-XXXXXXXXXXXXXXXXXXX",
+        // [Required]
+        // A channel to post channel gacha result.
+        // Ensure this bot is invited in the channel.
+        "SLACK_OUTPUT_CHANNEL": "random",
+        // [Optional]
+        // A string of CRON expressions representing the schedule on which this app runs.
+        "SCHEDULE": "0 9 ? * * *",
+        // [Optional]
+        // The language that the gacha post is written in.
+        "OUTPUT_LANGUAGE": "en",
+        // [Optional]
+        // webhook URL to post the notification about error encountered in this app.
+        "ERROR_NOTICE_WEBHOOK": "https://hooks.slack.com/services/TOUR_WEB_HOOK",
+        // [Optional]
+        // User mension to notify the error.
+        "ERROR_NOTICE_USER_MENTION": "@john.doe"
+      }
+    }
+  }
+}
